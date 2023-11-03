@@ -1,5 +1,6 @@
 package org.exercise.java.nations;
 
+import java.math.BigInteger;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +70,7 @@ public class MainNation {
 
 
 
+            // choose the country and language print
             System.out.println("choose the id of the country you want the stats");
             int userIDCountry = Integer.parseInt(userInput.nextLine());
             System.out.println(" ");
@@ -119,6 +121,58 @@ public class MainNation {
                 System.out.println("Unable to prepare statement");
                 e.printStackTrace();
             }
+
+
+
+
+
+
+
+
+            // print of the stats
+            System.out.println(" ");
+            System.out.println(" ");
+            System.out.println("Statistics: ");
+            String queryCountriesStats =
+                    "select cs.year, cs.population, cs.gdp "
+                            + "from country_stats cs "
+                            + "where cs.country_id = ? "
+                            + "order by year ;";
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(queryCountriesStats)) {
+
+                preparedStatement.setInt(1, userIDCountry);
+
+
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+
+                    while (resultSet.next()) {
+
+                        int year = resultSet.getInt("cs.year");
+                        int population = resultSet.getInt("cs.population");
+                        long gdp = resultSet.getLong("cs.gdp");
+
+                        System.out.println("year: " + year + "   pop: " + population + "    gdp: " + gdp);
+
+                    }
+
+                } catch (SQLException e) {
+                    System.out.println("Unable to execute query");
+                    e.printStackTrace();
+                }
+
+
+            } catch (SQLException e) {
+                System.out.println("Unable to prepare statement");
+                e.printStackTrace();
+            }
+
+
+
+
+
+
+
 
 
         } catch (SQLException e) {
